@@ -14,7 +14,7 @@ import re
 import time
 import socket
 import os
-
+import httplib
 # from highfive import irc
 
 # Maximum per page is 100. Sorted by number of commits, so most of the time the
@@ -22,7 +22,8 @@ import os
 contributors_url = "https://api.github.com/repos/%s/%s/contributors?per_page=100"
 post_comment_url = "https://api.github.com/repos/%s/%s/issues/%s/comments"
 collabo_url = "https://api.github.com/repos/%s/%s/collaborators"
-issue_url = "https://api.github.com/repos/%s/%s/issues/%s"
+issue_url = "/repos/%s/%s/issues/%s"
+rest_endpoint = "api.github.com"
 
 welcome_with_reviewer = '@%s (or someone else)'
 welcome_without_reviewer = "@nrc or @huonw (NB. this repo may be misconfigured)"
@@ -67,14 +68,22 @@ def _load_json_file(name):
     with open(os.path.join(configs_dir, name)) as config:
         return json.loads(config.read())
 
+def rest_api(endpoint, path, method, token, data):
+    data = None if not data else json.dumps(data)
+    headers = {} if not data else {'Content-Type': 'application/json'}    
+    conn = httplib.HTTPSConnection(endpoint)
+    conn.request(method, path, data, headers)
+    response = conn.getresponse()
+    return response.status
+
 def api_req(method, url, data=None, username=None, token=None, media_type=None):
     data = None if not data else json.dumps(data)
     headers = {} if not data else {'Content-Type': 'application/json'}
     req = urllib2.Request(url, data, headers)
     req.get_method = lambda: method
     if token:
-        base64string = base64.standard_b64encode('%s:x-oauth-basic' % (token)).replace('\n', '')
-        req.add_header("Authorization", "Basic %s" % base64string)
+        # base64string = base64.standard_b64encode('%s:x-oauth-basic' % (token)).replace('\n', '')
+        req.add_header("Authorization", "token %s" % token)
 
     if media_type:
         req.add_header("Accept", media_type)
@@ -97,13 +106,10 @@ def post_comment(body, owner, repo, issue, user, token):
             raise e
 
 def set_assignee(assignee, owner, repo, issue, user, token, author):
-    global issue_url
+    global rest_endpoint, issue_url
     try:
-        result = api_req("PATCH", issue_url % (owner, repo, issue), {"assignee": assignee}, user, token)['body']
-    except urllib2.HTTPError, e:
-        if e.code == 201:
-            pass
-        else:
+        rest_api(rest_endpoint, issue_url % (owner, repo, issue), "PATCH", token, {"assignee": assignee})#api_req("PATCH", issue_url % (owner, repo, issue), {"assignee": assignee}, user, token)['body']
+    except IOError, e:        
             raise e
 
     # if assignee:
@@ -180,8 +186,8 @@ def find_reviewer(commit_msg):
 
 # Choose a reviewer for the PR
 def choose_reviewer(repo, owner, diff, exclude):
-    if not (owner == 'rust-lang' or (owner == 'nrc' and repo == 'highfive')):
-        return 'test_user_selection_ignore_this'
+    # if not (owner == 'rust-lang' or (owner == 'nrc' and repo == 'highfive')):
+    #     return 'test_user_selection_ignore_this'
 
     # Get JSON data on reviewers.
     reviewers = _load_json_file(repo + '.json')
