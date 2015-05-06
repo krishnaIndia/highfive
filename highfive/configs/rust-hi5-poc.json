@@ -1,0 +1,11 @@
+{
+    "groups": {
+        "all": ["core"]
+    },
+    "dirs": {
+        "doc": ["doc"]
+    },
+    "contributors": [
+        "krishnaIndia"
+    ]
+}
