@@ -22,8 +22,7 @@ import httplib
 contributors_url = "https://api.github.com/repos/%s/%s/contributors?per_page=100"
 post_comment_url = "https://api.github.com/repos/%s/%s/issues/%s/comments"
 collabo_url = "https://api.github.com/repos/%s/%s/collaborators"
-issue_url = "/repos/%s/%s/issues/%s"
-rest_endpoint = "api.github.com"
+issue_url = "https://api.github.com/repos/%s/%s/issues/%s"
 
 welcome_with_reviewer = '@%s (or someone else)'
 welcome_without_reviewer = "@nrc or @huonw (NB. this repo may be misconfigured)"
@@ -68,22 +67,14 @@ def _load_json_file(name):
     with open(os.path.join(configs_dir, name)) as config:
         return json.loads(config.read())
 
-def rest_api(endpoint, path, method, token, data):
-    data = None if not data else json.dumps(data)
-    headers = {} if not data else {'Content-Type': 'application/json'}    
-    conn = httplib.HTTPSConnection(endpoint)
-    conn.request(method, path, data, headers)
-    response = conn.getresponse()
-    return response.status
-
 def api_req(method, url, data=None, username=None, token=None, media_type=None):
     data = None if not data else json.dumps(data)
     headers = {} if not data else {'Content-Type': 'application/json'}
     req = urllib2.Request(url, data, headers)
     req.get_method = lambda: method
     if token:
-        # base64string = base64.standard_b64encode('%s:x-oauth-basic' % (token)).replace('\n', '')
-        req.add_header("Authorization", "token %s" % token)
+        base64string = base64.standard_b64encode('%s:x-oauth-basic' % (token)).replace('\n', '')
+        req.add_header("Authorization", "Basic %s" % base64string)
 
     if media_type:
         req.add_header("Accept", media_type)
@@ -106,9 +97,9 @@ def post_comment(body, owner, repo, issue, user, token):
             raise e
 
 def set_assignee(assignee, owner, repo, issue, user, token, author):
-    global rest_endpoint, issue_url
+    global issue_url
     try:
-        rest_api(rest_endpoint, issue_url % (owner, repo, issue), "PATCH", token, {"assignee": assignee})#api_req("PATCH", issue_url % (owner, repo, issue), {"assignee": assignee}, user, token)['body']
+        return api_req("PATCH", issue_url % (owner, repo, issue), {"assignee": assignee}, user, token)['body']
     except IOError, e:        
             raise e
 
