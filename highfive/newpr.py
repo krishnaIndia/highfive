@@ -1,4 +1,4 @@
-#!/Python27/python
+#!/usr/bin/python
 
 import base64
 import urllib, urllib2
@@ -26,11 +26,11 @@ issue_url = "https://api.github.com/repos/%s/%s/issues/%s"
 
 welcome_with_reviewer = '@%s (or someone else)'
 welcome_without_reviewer = "@nrc or @huonw (NB. this repo may be misconfigured)"
-raw_welcome = """Thanks for the pull request, and welcome! The Rust team is excited to review your changes, and you should hear from %s soon.
+raw_welcome = """Thanks for the pull request, and welcome! The MaidSafe team is excited to review your changes, and you should hear from %s soon.
 
 If any changes to this PR are deemed necessary, please add them as extra commits. This ensures that the reviewer can see what has changed since they last reviewed the code. The way Github handles out-of-date commits, this should also make it reasonably obvious what issues have or haven't been addressed. Large or tricky changes may require several passes of review and changes.
 
-Please see [CONTRIBUTING.md](https://github.com/rust-lang/rust/blob/master/CONTRIBUTING.md) for more information.
+Please see [CONTRIBUTING.md](https://github.com/maidsafe/maidsafe/blob/master/CONTRIBUTING.md) for more information.
 """
 
 
@@ -45,7 +45,7 @@ warning_summary = '<img src="http://www.joshmatthews.net/warning.svg" alt="warni
 unsafe_warning_msg = 'These commits modify **unsafe code**. Please review it carefully!'
 submodule_warning_msg = 'These commits modify **submodules**.'
 
-review_with_reviewer = 'r? @%s\n\n(rust_highfive has picked a reviewer for you, use r? to override)'
+review_with_reviewer = 'r? @%s\n\n(maidsafe_highfive has picked a reviewer for you, use r? to override)'
 review_without_reviewer = '@%s: no appropriate reviewer found, use r? to override'
 def review_msg(reviewer, submitter):
     if reviewer is None:
