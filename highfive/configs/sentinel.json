@@ -1,0 +1,13 @@
+{
+    "groups": {
+        "all": ["@inetic", "@benjaminbollen", "@Fraser999"]
+    },
+    "dirs": {        
+    },
+    "contributors": [
+        "dirvine",
+        "inetic",
+        "benjaminbollen",
+        "Fraser999"
+    ]
+}

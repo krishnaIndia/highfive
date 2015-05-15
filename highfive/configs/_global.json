@@ -1,6 +1,7 @@
 {
     "groups": {
-        "core": ["@krishnaIndia", "@ustulation"],
-        "doc": ["@viv-rajkumar"]
+        "core": ["@dirvine", "@ustulation", "@chandraprakash", "@inetic", "@maqi"],
+        "web": ["@viv-rajkumar", "@krishnaIndia"],
+		"doc": ["@viv-rajkumar"]
     }
 }
