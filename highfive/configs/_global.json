@@ -1,7 +1,7 @@
 {
     "groups": {
-        "core": ["@brson", "@pcwalton", "@nikomatsakis", "@alexcrichton", "@huonw"],
-        "crates": ["@huonw", "@alexcrichton"],
-        "doc": ["@steveklabnik"]
+        "core": ["@dirvine", "@ustulation", "@chandraprakash", "@inetic", "@maqi"],
+        "web": ["@viv-rajkumar", "@krishnaIndia"],
+		"doc": ["@viv-rajkumar"]
     }
 }

@@ -1,0 +1,15 @@
+{
+    "groups": {
+        "all": ["@inetic", "@vinipsmaker", "@canndrew"]
+    },
+    "dirs": {        
+    },
+    "contributors": [
+        "dirvine",
+	"s-brian",
+        "chandraprakash",
+        "ned14",
+        "Fraser999",
+	"vinipsmaker"
+    ]
+}
